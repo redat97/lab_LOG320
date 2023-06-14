@@ -201,11 +201,4 @@ class Client {
         }
         return possibleMoves;
     }
-
-    public void play(String move, String board){
-        String startingPosition = move.split("-")[0];
-        String destinationPosition = move.split("-")[1];
-
-
-    }
 }
