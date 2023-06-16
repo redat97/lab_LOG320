@@ -35,4 +35,36 @@ public class Move {
     public void setCapturedColor(int capturedColor) {
         this.capturedColor = capturedColor;
     }
+
+    public String toString(){
+        StringBuilder startingPosition = new StringBuilder();
+        StringBuilder destinationPosition = new StringBuilder();
+
+        startingPosition.append(this.getXPositionLetter(this.x_startingPosition) + (this.getY_startingPosition()+1));
+        destinationPosition.append(this.getXPositionLetter(this.x_destinationPosition) + (this.getY_destinationPosition()+1));
+
+        return startingPosition + "-" + destinationPosition;
+    }
+
+    public String getXPositionLetter(int x_position){
+
+        if (x_position == 0) {
+            return ("A");
+        } else if (x_position == 1) {
+            return("B");
+        } else if (x_position == 2) {
+            return("C");
+        } else if (x_position == 3) {
+            return("D");
+        } else if (x_position == 4) {
+            return("E");
+        } else if (x_position == 5) {
+            return("F");
+        } else if (x_position == 6) {
+            return("G");
+        }
+
+        return("H");
+
+    }
 }

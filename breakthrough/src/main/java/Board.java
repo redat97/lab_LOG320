@@ -1,13 +1,14 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Board {
     int[][] board;
     ArrayList<String[]> captures;
-    ArrayList<Move> movesCompleted;
+    ArrayList<Move> moveHistory;
 
     public Board(String s){
         captures = new ArrayList<>();
-        movesCompleted = new ArrayList<Move>();
+        moveHistory = new ArrayList<Move>();
         s = s.replace(" ", "");
         board = new int[8][8];
         int index = 0;
@@ -18,29 +19,29 @@ public class Board {
             }
         }
 
-        board = transpose(board);
+        board = transposeAndMirror(board);
     }
 
-    public int[][] transpose(int[][] board) {
+    public int[][] transposeAndMirror(int[][] board) {
         int m = board.length;
         int n = board[0].length;
 
         int[][] transposedMatrix = new int[n][m];
 
-        // Effectuer la transposée
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 transposedMatrix[j][i] = board[i][j];
             }
         }
 
-        // Copy the last column of the original matrix to the last row of the transposed matrix
-        for (int i = 0; i < n; i++) {
-            transposedMatrix[i][m-1] = board[m-1][i];
+        int[][] mirroredMatrix = new int[n][m];
+        for(int i = 0; i < n; i++) {
+            mirroredMatrix[i] = Arrays.copyOf(transposedMatrix[n-i-1], m);
         }
 
-        return transposedMatrix;
+        return mirroredMatrix;
     }
+
 
     public ArrayList<Move> getPossibleMoves(int player) {
         ArrayList<Move> possibleMoves = new ArrayList<>();
@@ -49,15 +50,18 @@ public class Board {
                 for (int j = 7; j >= 0; j--) {
                     if (this.board[i][j] == player) {
                         if ((i != 0) && (this.board[i][j-1] == 0)) {
-                            possibleMoves.add(new Move(i,j,i,j-1));
+                            Move move = new Move(i,j,(i),(j-1));
+                            possibleMoves.add(move);
                         }
 
                         if ((i != 0 & j != 7) && !(this.board[i - 1][j - 1]==player)) {
-                            possibleMoves.add(new Move(i,j,(i-1),(j-1)));
+                            Move move = new Move(i,j,(i-1),(j-1));
+                            possibleMoves.add(move);
                         }
 
-                        if ((i != 0 & j != 0) && !(this.board[i + 1][j - 1]==player)) {
-                            possibleMoves.add(new Move(i,j,(i+1),(j-1)));
+                        if ((i != 7 & j != 0) && !(this.board[i + 1][j - 1]==player)) {
+                            Move move = new Move(i,j,(i+1),(j-1));
+                            possibleMoves.add(move);
                         }
                     }
                 }
@@ -67,15 +71,18 @@ public class Board {
                 for (int j = 0; j < 8; j++) {
                     if (this.board[i][j]==player) {
                         if ((j != 7) && (this.board[i][j+1]==0)) {
-                            possibleMoves.add(new Move(i,j,(i),(j+1)));
+                            Move move = new Move(i,j,(i),(j+1));
+                            possibleMoves.add(move);
                         }
 
                         if ((i != 7 & j != 7) && !(this.board[i + 1][j + 1]==player)) {
-                            possibleMoves.add(new Move(i,j,(i+1),(j+1)));
+                            Move move = new Move(i,j,(i+1),(j+1));
+                            possibleMoves.add(move);
                         }
 
                         if ((i != 0 & j != 7) && !(this.board[i - 1][j + 1]==player)) {
-                            possibleMoves.add(new Move(i,j,(i-1),(j+1)));
+                            Move move = new Move(i,j,(i-1),(j+1));
+                            possibleMoves.add(move);
                         }
                     }
                 }
@@ -88,14 +95,14 @@ public class Board {
         if (board[move.getX_destinationPosition()][move.getY_destinationPosition()] == 0){
             board[move.getX_destinationPosition()][move.getY_destinationPosition()] = board[move.getX_startingPosition()][move.getY_startingPosition()];
             board[move.getX_startingPosition()][move.getY_startingPosition()] = 0;
-            movesCompleted.add(move);
+            moveHistory.add(move);
         } else if (board[move.getX_destinationPosition()][move.getY_destinationPosition()] != player){
             if (player == 2){
                 move.setCapturedColor(4);
-                movesCompleted.add(move);
+                moveHistory.add(move);
             }else {
                 move.setCapturedColor(2);
-                movesCompleted.add(move);
+                moveHistory.add(move);
             }
             board[move.getX_destinationPosition()][move.getY_destinationPosition()] = player;
             board[move.getX_startingPosition()][move.getY_startingPosition()] = 0;
@@ -103,8 +110,8 @@ public class Board {
     }
 
     public void undo(){
-        if (!movesCompleted.isEmpty()) {
-            Move lastMove = movesCompleted.remove(movesCompleted.size()-1);
+        if (!moveHistory.isEmpty()) {
+            Move lastMove = moveHistory.remove(moveHistory.size()-1);
 
             if (lastMove.getCapturedColor() != null) {
                 this.board[lastMove.getX_startingPosition()][lastMove.getY_startingPosition()] =
@@ -117,31 +124,6 @@ public class Board {
                 this.board[lastMove.getX_destinationPosition()][lastMove.getY_destinationPosition()] = 0;
             }
         }
-    }
-
-
-
-    public String translateToLetters(int i, int j){
-        StringBuilder s = new StringBuilder();
-        if (i == 0) {
-            s.append("H");
-        } else if (i == 1) {
-            s.append("G");
-        } else if (i == 2) {
-            s.append("F");
-        } else if (i == 3) {
-            s.append("E");
-        } else if (i == 4) {
-            s.append("D");
-        } else if (i == 5) {
-            s.append("C");
-        } else if (i == 6) {
-            s.append("B");
-        } else if (i == 7) {
-            s.append("A");
-        }
-
-        return String.valueOf(s.append(j+1));
     }
 
     public void printBoard() {

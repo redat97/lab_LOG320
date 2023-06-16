@@ -47,12 +47,9 @@ class ClientTemp {
                     Board dummyBoard = new Board(s);
 
                     System.out.println("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");
-                    ArrayList<Move> possibleMoves = dummyBoard.getPossibleMoves(cpu.getPlayer());
-                    dummyBoard.play(possibleMoves.get(5), cpu.getPlayer());
-                    dummyBoard.undo();
-                    dummyBoard.printBoard();
-                    String move = null;
-                    move = console.readLine();
+                    ArrayList<Move> minMaxMoves = cpu.getNextMoveMinMax(dummyBoard);
+                    String move = minMaxMoves.get(6).toString();
+                    //move = console.readLine();
                     output.write(move.getBytes(),0,move.length());
                     output.flush();
                 }
