@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class CPUPlayer {
-    private int opponentNumber;
-    private int playerNumber;
+    private final int opponentNumber;
+    private final int playerNumber;
     private int numExploredNodes;
 
     public CPUPlayer(int player){
@@ -33,7 +34,7 @@ public class CPUPlayer {
         for (int i = 0; i < possibleMoves.size(); i++) {
             Move move = possibleMoves.get(i);
             board.play(move, this.getPlayerNumber());
-            int score = minimax(board,false);
+            int score = minimax(board,false, 4);
             if (score>highestPossibleScore){
                 highestPossibleScore = score;
                 bestMove = new ArrayList<>();
@@ -46,37 +47,108 @@ public class CPUPlayer {
         return bestMove;
     }
 
-    public int minimax(Board board, boolean isMaximizing){
-        int resultat = board.evaluate(this.getPlayerNumber());
-        addNumOfExploredNodes();
-        if (resultat!=-1 || numExploredNodes == 1000){
-            return resultat;
+    public ArrayList<Move> getNextMoveAB(Board board){
+        int alpha = (int) Double.NEGATIVE_INFINITY;
+        int beta = (int) Double.POSITIVE_INFINITY;
+        double highestPossibleScore = Double.NEGATIVE_INFINITY;
+        ArrayList<Move> bestMove = new ArrayList<>();
+        ArrayList<Move> possibleMoves = board.getPossibleMoves(this.getPlayerNumber());
+        for (int i = 0; i < possibleMoves.size(); i++) {
+            Move m = possibleMoves.get(i);
+            board.play(m, this.getPlayerNumber());
+            int score = minimaxAB(board,false,alpha,beta,4);
+            if (score>highestPossibleScore){
+                highestPossibleScore = score;
+                bestMove = new ArrayList<>();
+                bestMove.add(m);
+            } else if (score==highestPossibleScore) {
+                bestMove.add(m);
+            }
+            board.undo();
+        }
+        return bestMove;
+    }
+
+    public int minimax(Board board, boolean isMaximizing, int depth){
+        if (depth == 0){
+            return board.evaluate(this.getPlayerNumber());
         }
 
         if(isMaximizing){
-            double bestValue = Double.NEGATIVE_INFINITY;
+            int bestValue = Integer.MAX_VALUE;
             ArrayList<Move> possibleMoves = board.getPossibleMoves(this.getPlayerNumber());
             for (int i = 0; i < possibleMoves.size(); i++) {
                 Move move = possibleMoves.get(i);
                 board.play(move,this.getPlayerNumber());
-                int score = minimax(board,false);
-                bestValue = Double.max(score,bestValue);
+                int score = minimax(board,false, depth - 1);
+                bestValue = Math.max(score,bestValue);
                 board.undo();
             }
-            return (int) bestValue;
+            return bestValue;
         }
 
-        double minValue = Double.POSITIVE_INFINITY;
+        int minValue = Integer.MIN_VALUE;
         ArrayList<Move> possibleMoves = board.getPossibleMoves(this.getOpponentNumber());
         for (int i = 0; i < possibleMoves.size(); i++) {
             Move move = possibleMoves.get(i);
             board.play(move,this.getOpponentNumber());
-            int score = minimax(board,true);
-            minValue = Double.min(score,minValue);
+            int score = minimax(board,true, depth - 1);
+            minValue = Math.min(score,minValue);
             board.undo();
         }
-        return (int) minValue;
-
+        return minValue;
     }
 
+    public int minimaxAB(Board board, boolean isMaximizing, int alpha, int beta, int depth){
+        addNumOfExploredNodes();
+        if (depth == 0){
+            return board.evaluate(this.getPlayerNumber());
+        }
+
+        ArrayList<Move> possibleMoves;
+        if (isMaximizing){
+            possibleMoves = board.getPossibleMoves(this.getPlayerNumber());
+            for (Move m : possibleMoves) {
+                board.play(m, this.getPlayerNumber());
+                int score = minimaxAB(board, false, alpha, beta, depth-1);
+                board.undo();
+                alpha = Math.max(alpha, score);
+                if (beta <= alpha){
+                    break;
+                }
+            }
+            return alpha;
+        } else {
+            possibleMoves = board.getPossibleMoves(this.getOpponentNumber());
+            for (Move m : possibleMoves) {
+                board.play(m, this.getOpponentNumber());
+                int score = minimaxAB(board, true, alpha, beta, depth-1);
+                board.undo();
+                beta = Math.min(beta, score);
+                if (beta <= alpha){
+                    break;
+                }
+            }
+            return beta;
+        }
+    }
+
+
+
+    public Move getNextMove(Board board, boolean alphaBeta){
+
+        if (alphaBeta){
+            ArrayList<Move> minMaxABMoves = this.getNextMoveAB(board);
+            Random random = new Random();
+            int randomNumber = random.nextInt(minMaxABMoves.size()-1 + 1);
+
+            return minMaxABMoves.get(randomNumber);
+        }
+        ArrayList<Move> minMaxMoves = this.getNextMoveMinMax(board);
+
+        Random random = new Random();
+        int randomNumber = random.nextInt(minMaxMoves.size()-1 + 1);
+
+        return minMaxMoves.get(randomNumber);
+    }
 }

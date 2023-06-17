@@ -49,12 +49,12 @@ public class Board {
             for (int i = 7; i >= 0; i--) {
                 for (int j = 7; j >= 0; j--) {
                     if (this.board[i][j] == player) {
-                        if ((i != 0) && (this.board[i][j-1] == 0)) {
+                        if ((i != 0 & j!=0) && (this.board[i][j-1] == 0)) {
                             Move move = new Move(i,j,(i),(j-1));
                             possibleMoves.add(move);
                         }
 
-                        if ((i != 0 & j != 7) && !(this.board[i - 1][j - 1]==player)) {
+                        if ((i != 0 & j != 0) && !(this.board[i - 1][j - 1]==player)) {
                             Move move = new Move(i,j,(i-1),(j-1));
                             possibleMoves.add(move);
                         }
@@ -70,7 +70,7 @@ public class Board {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     if (this.board[i][j]==player) {
-                        if ((j != 7) && (this.board[i][j+1]==0)) {
+                        if ((j!=7) && (this.board[i][j+1]==0)) {
                             Move move = new Move(i,j,(i),(j+1));
                             possibleMoves.add(move);
                         }
@@ -90,6 +90,8 @@ public class Board {
         }
         return possibleMoves;
     }
+
+
 
     public void play(Move move, int player){
         if (board[move.getX_destinationPosition()][move.getY_destinationPosition()] == 0){
@@ -142,29 +144,44 @@ public class Board {
         }
     }
 
-    public int evaluate(int player){
+    public int evaluate_old(int player){
         int opponent;
         if (player==2){
             opponent = 4;
             for (int i = 0; i < 8; i++) {
-                if (board[7][i] == player){
+                if (board[i][7] == player){
                     return 100;
                 }
 
-                if (board[0][i]==opponent){
+                if (board[i][0]==opponent){
                     return -100;
                 }
             }
         }else {
             opponent = 2;
             for (int i = 0; i < 8; i++) {
-                if (board[7][i] == opponent){
+                if (board[i][0] == opponent){
                     return -100;
                 }
 
-                if (board[0][i] == player){
+                if (board[i][7] == player){
                     return 100;
                 }
+            }
+        }
+        return 0;
+    }
+
+    public int evaluate(int player) {
+        for (int i = 0; i < 8; i++) {
+            if (board[i][7] == 2 && player == 2) {
+                return 100;
+            } else if (board[i][7] == 2 && player == 4) {
+                return -100;
+            } else if (board[i][0] == 4 && player == 4) {
+                return 100;
+            } else if (board[i][0] == 4 && player == 2) {
+                return -100;
             }
         }
         return 0;
