@@ -156,14 +156,14 @@ public class Board {
             Move lastMove = moveHistory.remove(moveHistory.size()-1);
 
             if (lastMove.getCapturedColor() != null) {
-                this.board[lastMove.getHorizontalStartingPosition()][lastMove.getVerticalStartingPosition()] =
-                        this.board[lastMove.getHorizontalDestinationPosition()][lastMove.getVerticalDestinationPosition()];
-                this.board[lastMove.getHorizontalDestinationPosition()][lastMove.getVerticalDestinationPosition()] = lastMove.getCapturedColor();
+                this.board[BOARDSIZE - lastMove.getVerticalStartingPosition()][lastMove.getHorizontalStartingPosition()] =
+                        this.board[BOARDSIZE - lastMove.getVerticalDestinationPosition()][lastMove.getHorizontalDestinationPosition()];
+                this.board[BOARDSIZE - lastMove.getVerticalStartingPosition()][lastMove.getHorizontalStartingPosition()] = lastMove.getCapturedColor();
 
             } else {
-                this.board[lastMove.getHorizontalDestinationPosition()][lastMove.getVerticalDestinationPosition()] =
-                        this.board[lastMove.getHorizontalStartingPosition()][lastMove.getVerticalStartingPosition()];
-                this.board[lastMove.getHorizontalDestinationPosition()][lastMove.getVerticalDestinationPosition()] = 0;
+                this.board[BOARDSIZE - lastMove.getVerticalDestinationPosition()][lastMove.getHorizontalDestinationPosition()] =
+                        this.board[BOARDSIZE - lastMove.getVerticalDestinationPosition()][lastMove.getHorizontalDestinationPosition()];
+                this.board[BOARDSIZE - lastMove.getVerticalDestinationPosition()][lastMove.getHorizontalDestinationPosition()] = 0;
             }
         }
     }
