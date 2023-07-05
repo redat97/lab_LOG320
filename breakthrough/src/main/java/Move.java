@@ -16,8 +16,8 @@ public class Move {
         move = move.trim();
         this.verticalStart = getXNumberFromLetter(move.charAt(0));
         this.horizontalStart = Character.getNumericValue(move.charAt(1));
-        this.verticalDestination = getXNumberFromLetter(move.charAt(5));
-        this.horizontalDestination = Character.getNumericValue(move.charAt(6));
+        this.verticalDestination = getXNumberFromLetter(move.charAt(3));
+        this.horizontalDestination = Character.getNumericValue(move.charAt(4));
     }
 
     public int getHorizontalStartingPosition() {
@@ -45,8 +45,8 @@ public class Move {
     }
 
     public String toString(){
-        String startingPosition =  this.getXLetterFromNumber(this.verticalStart) + (this.horizontalStart + 1);
-        String destinationPosition = this.getXLetterFromNumber(this.verticalDestination) + (this.horizontalStart + 1);
+        String startingPosition =  this.getXLetterFromNumber(this.horizontalStart) + (this.verticalStart);
+        String destinationPosition = this.getXLetterFromNumber(this.horizontalDestination) + (this.verticalDestination);
 
         return startingPosition + "-" + destinationPosition;
     }

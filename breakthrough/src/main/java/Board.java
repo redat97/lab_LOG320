@@ -40,20 +40,21 @@ public class Board {
         ArrayList<Move> possibleMoves = new ArrayList<>();
         if (player == 4){
             for (int i = BOARD_BORDER; i > 0; i--) {
-                for (int j = 0; j < BOARD_BORDER; j++) {
+                for (int j = 0; j <= BOARD_BORDER; j++) {
                     if (board[i][j] == player){
                         if ((i != 0) && (this.board[i - 1][j] == EMPTY)) {
-                            Move move = new Move(BOARD_BORDER - i,j,BOARD_BORDER-(i - 1),(j));
+                            Move move = new Move((BOARDSIZE - i), j, BOARDSIZE - (i - 1), j);
                             possibleMoves.add(move);
                         }
 
-                        if ((i != 0 & j != 0) && !(this.board[i - 1][j - 1]==player)) {
-                            Move move = new Move(BOARD_BORDER - i,j,BOARD_BORDER-(i - 1),(j - 1));
+                        if ((i != 0 && j != 0) && !(this.board[i - 1][j - 1]==player)) {
+                            Move move = new Move((BOARDSIZE - i), j, BOARDSIZE - (i - 1), (j - 1));
+                            System.out.println(move);
                             possibleMoves.add(move);
                         }
 
-                        if ((i != 0 && j != BOARD_BORDER - 1) && !(this.board[i - 1][j + 1]==player)) {
-                            Move move = new Move(BOARD_BORDER - i,j,BOARD_BORDER-(i - 1),(j + 1));
+                        if ((i != 0 && j != BOARD_BORDER) && !(this.board[i - 1][j + 1]==player)) {
+                            Move move = new Move((BOARDSIZE - i), j, BOARDSIZE - (i - 1), (j + 1));
                             possibleMoves.add(move);
                         }
                     }
@@ -61,19 +62,19 @@ public class Board {
             }
         }else {
             for (int i = 0; i < BOARDSIZE; i++) {
-                for (int j = 0; j < BOARD_BORDER; j++) {
+                for (int j = 0; j <= BOARD_BORDER; j++) {
                     if (board[i][j] == player) {
-                        if ((i != BOARDSIZE - 1) && (this.board[i + 1][j] == EMPTY)) {
-                            Move move = new Move(i, j, (i + 1), (j));
+                        if ((i + 1 < BOARDSIZE) && (this.board[i + 1][j] == EMPTY)) {
+                            Move move = new Move(i, j, (i + 1), j);
                             possibleMoves.add(move);
                         }
 
-                        if ((i != BOARDSIZE - 1 & j != 0) && !(this.board[i + 1][j - 1] == player)) {
-                            Move move = new Move(i, j,(i + 1), (j - 1));
+                        if ((i + 1 < BOARDSIZE && j != 0) && !(this.board[i + 1][j - 1] == player)) {
+                            Move move = new Move(i, j, (i + 1), (j - 1));
                             possibleMoves.add(move);
                         }
 
-                        if ((i != BOARDSIZE - 1 && j != BOARD_BORDER - 1) && !(this.board[i + 1][j + 1] == player)) {
+                        if ((i + 1 < BOARDSIZE && j != BOARD_BORDER) && !(this.board[i + 1][j + 1] == player)) {
                             Move move = new Move(i, j, (i + 1), (j + 1));
                             possibleMoves.add(move);
                         }
@@ -133,11 +134,11 @@ public class Board {
     }*/
 
     public void play(Move move, int player){
-        if (board[move.getVerticalDestinationPosition()][move.getHorizontalDestinationPosition()] == EMPTY){
-            board[move.getVerticalDestinationPosition()][move.getHorizontalDestinationPosition()] = board[move.getVerticalStartingPosition()][move.getHorizontalStartingPosition()];
-            board[move.getHorizontalStartingPosition()][move.getVerticalStartingPosition()] = 0;
+        if (board[BOARDSIZE - move.getVerticalDestinationPosition()][move.getHorizontalDestinationPosition()] == EMPTY){
+            board[BOARDSIZE - move.getVerticalDestinationPosition()][move.getHorizontalDestinationPosition()] = board[BOARDSIZE - move.getVerticalStartingPosition()][move.getHorizontalStartingPosition()];
+            board[BOARDSIZE - move.getVerticalStartingPosition()] [move.getHorizontalStartingPosition()]= 0;
             moveHistory.add(move);
-        } else if (board[move.getVerticalDestinationPosition()][move.getHorizontalDestinationPosition()] != player){
+        } else if (board[BOARDSIZE - move.getVerticalDestinationPosition()][move.getHorizontalDestinationPosition()] != player){
             if (player == 2){
                 move.setCapturedColor(4);
                 moveHistory.add(move);
@@ -145,8 +146,8 @@ public class Board {
                 move.setCapturedColor(2);
                 moveHistory.add(move);
             }
-            board[move.getVerticalDestinationPosition()][move.getHorizontalDestinationPosition()] = player;
-            board[move.getVerticalStartingPosition()][move.getHorizontalStartingPosition()] = 0;
+            board[BOARDSIZE - move.getVerticalDestinationPosition()][move.getHorizontalDestinationPosition()] = player;
+            board[BOARDSIZE - move.getVerticalStartingPosition()][move.getHorizontalStartingPosition()] = 0;
         }
     }
 
