@@ -24,7 +24,7 @@ class Client {
                 cmd = (char)input.read();
                 System.out.println(cmd);
 
-                // Debut de la partie en joueur blanc
+                // Debut de la partie en joueur rouge
                 if(cmd == '1'){
                     byte[] aBuffer = new byte[1024];
 
@@ -45,11 +45,11 @@ class Client {
                         }
                     }
 
-                    cpu = new CPUPlayer(2);
+                    cpu = new CPUPlayer(4);
                     dummyBoard = new Board(s);
 
                     System.out.println("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");
-                    Move moveToPlay = cpu.getNextMove(dummyBoard, true);
+                    Move moveToPlay = cpu.getNextMove(dummyBoard);
                     dummyBoard.play(moveToPlay, cpu.getPlayerNumber());
                     output.write(moveToPlay.toString().getBytes(),0,moveToPlay.toString().length());
                     output.flush();
@@ -87,6 +87,9 @@ class Client {
                     long startTime = System.currentTimeMillis();
 
                     byte[] aBuffer = new byte[16];
+                    if (cpu == null){
+                        cpu = new CPUPlayer(2);
+                    }
 
                     int size = input.available();
                     System.out.println("size :" + size);
@@ -98,11 +101,9 @@ class Client {
                     dummyBoard.play(opponentMove, cpu.getOpponentNumber());
 
                     System.out.println("Entrez votre coup : ");
-                    if (cpu == null){
-                        cpu = new CPUPlayer(4);
-                    }
 
-                    Move moveToPlay = cpu.getNextMove(dummyBoard, true);
+
+                    Move moveToPlay = cpu.getNextMove(dummyBoard);
                     dummyBoard.play(moveToPlay, cpu.getPlayerNumber());
                     output.write(moveToPlay.toString().getBytes(),0,moveToPlay.toString().length());
                     long endTime = System.currentTimeMillis();
@@ -113,7 +114,7 @@ class Client {
                 // Le dernier coup est invalide
                 if(cmd == '4'){
                     System.out.println("Coup invalide, entrez un nouveau coup : ");
-                    ArrayList<Move> minMaxMoves = cpu.getNextMoveMinMax(dummyBoard);
+                    ArrayList<Move> minMaxMoves = (ArrayList<Move>) cpu.getNextMoveAB(dummyBoard);
                     Move moveToPlay = minMaxMoves.get(6);
                     output.write(moveToPlay.toString().getBytes(),0,moveToPlay.toString().length());
                     output.flush();

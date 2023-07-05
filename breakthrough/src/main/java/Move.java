@@ -1,39 +1,39 @@
 public class Move {
-    private final int x_startingPosition;
-    private final int y_startingPosition;
-    private final int x_destinationPosition;
-    private final int y_destinationPosition;
+    private final int verticalStart;
+    private final int horizontalStart;
+    private final int verticalDestination;
+    private final int horizontalDestination;
     private Integer capturedColor = 0; // True if a piece was captured
 
-    public Move(int x_startingPosition, int y_startingPosition, int x_destinationPosition, int y_destinationPosition) {
-        this.x_startingPosition = x_startingPosition;
-        this.y_startingPosition = y_startingPosition;
-        this.x_destinationPosition = x_destinationPosition;
-        this.y_destinationPosition = y_destinationPosition;
+    public Move(int verticalStart, int horizontalStart, int verticalDestination, int horizontalDestination) {
+        this.verticalStart = verticalStart;
+        this.horizontalStart = horizontalStart;
+        this.verticalDestination = verticalDestination;
+        this.horizontalDestination = horizontalDestination;
     }
 
     public Move (String move){
         move = move.trim();
-        this.x_startingPosition = getXNumberFromLetter(move.charAt(0));
-        this.y_startingPosition = Character.getNumericValue(move.charAt(1))-1;
-        this.x_destinationPosition = getXNumberFromLetter(move.charAt(5));
-        this.y_destinationPosition = Character.getNumericValue(move.charAt(6))-1;
+        this.verticalStart = getXNumberFromLetter(move.charAt(0));
+        this.horizontalStart = Character.getNumericValue(move.charAt(1));
+        this.verticalDestination = getXNumberFromLetter(move.charAt(5));
+        this.horizontalDestination = Character.getNumericValue(move.charAt(6));
     }
 
-    public int getX_startingPosition() {
-        return x_startingPosition;
+    public int getHorizontalStartingPosition() {
+        return horizontalStart;
     }
 
-    public int getY_startingPosition() {
-        return y_startingPosition;
+    public int getVerticalStartingPosition() {
+        return verticalStart;
     }
 
-    public int getX_destinationPosition() {
-        return x_destinationPosition;
+    public int getHorizontalDestinationPosition() {
+        return horizontalDestination;
     }
 
-    public int getY_destinationPosition() {
-        return y_destinationPosition;
+    public int getVerticalDestinationPosition() {
+        return verticalDestination;
     }
 
     public Integer getCapturedColor() {
@@ -45,47 +45,45 @@ public class Move {
     }
 
     public String toString(){
-        //StringBuilder destinationPosition = new StringBuilder();
-
-        String startingPosition = this.getXLetterFromNumber(this.x_startingPosition) + (this.getY_startingPosition() + 1);
-        String destinationPosition = this.getXLetterFromNumber(this.x_destinationPosition) + (this.getY_destinationPosition()+1);
+        String startingPosition =  this.getXLetterFromNumber(this.verticalStart) + (this.horizontalStart + 1);
+        String destinationPosition = this.getXLetterFromNumber(this.verticalDestination) + (this.horizontalStart + 1);
 
         return startingPosition + "-" + destinationPosition;
     }
 
-    public String getXLetterFromNumber(int x_position){
-        if (x_position == 0) {
+    public String getXLetterFromNumber(int verticalPosition){
+        if (verticalPosition == 0) {
             return ("A");
-        } else if (x_position == 1) {
+        } else if (verticalPosition == 1) {
             return("B");
-        } else if (x_position == 2) {
+        } else if (verticalPosition == 2) {
             return("C");
-        } else if (x_position == 3) {
+        } else if (verticalPosition == 3) {
             return("D");
-        } else if (x_position == 4) {
+        } else if (verticalPosition == 4) {
             return("E");
-        } else if (x_position == 5) {
+        } else if (verticalPosition == 5) {
             return("F");
-        } else if (x_position == 6) {
+        } else if (verticalPosition == 6) {
             return("G");
         }
         return("H");
     }
 
-    public int getXNumberFromLetter(char x_position){
-        if (x_position == 'A') {
+    public int getXNumberFromLetter(char position){
+        if (position == 'A') {
             return (0);
-        } else if (x_position == 'B') {
+        } else if (position == 'B') {
             return(1);
-        } else if (x_position == 'C') {
+        } else if (position == 'C') {
             return(2);
-        } else if (x_position == 'D') {
+        } else if (position == 'D') {
             return(3);
-        } else if (x_position == 'E') {
+        } else if (position == 'E') {
             return(4);
-        } else if (x_position == 'F') {
+        } else if (position == 'F') {
             return(5);
-        } else if (x_position == 'G') {
+        } else if (position == 'G') {
             return(6);
         }
         return(7);
